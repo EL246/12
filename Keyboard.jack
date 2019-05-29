@@ -10,6 +10,7 @@ class Keyboard {
 
     /** Initializes the keyboard. */
     function void init() {
+        return;
     } 
 
     /**
@@ -33,6 +34,7 @@ class Keyboard {
      * F1 - F12 = 141 - 152
      */
     function char keyPressed() {
+        return Memory.peek(24576);
     }
 
     /**								
@@ -41,6 +43,19 @@ class Keyboard {
      * of the pressed key.
      */
     function char readChar() {
+        var char c;
+
+        do Output.printChar(0);
+        while (Keyboard.keyPressed() = 0){
+        }
+        let c = Keyboard.keyPressed();
+        while (~(Keyboard.keyPressed() = 0)) {
+        }
+
+        do Output.backSpace();
+        do Output.printChar(c);
+
+        return c;
     }
 
     /**								
@@ -49,6 +64,28 @@ class Keyboard {
      * and returns its value. Also handles user backspaces.
      */
     function String readLine(String message) {
+        var String s;
+        var char c;
+        var boolean b;
+
+        let b = true;
+        let s = String.new(64);
+        do Output.printString(message);
+        while (b & (s.length()<65)){
+            let c = Keyboard.readChar();
+            if (c = 128) {
+                do Output.println();
+                return s;
+            }
+            if (c = 129) {
+                do s.eraseLastChar();
+                do Output.backSpace();
+            } else {
+                do s.appendChar(c);
+            }
+        }
+        do Output.println();
+        return s;
     }   
 
     /**								
@@ -58,5 +95,79 @@ class Keyboard {
      * entered text is detected). Also handles user backspaces. 
      */
     function int readInt(String message) {
+        var int num, temp;
+        var bool scanForNums, neg, checkNeg;
+        var char c;
+
+        let num = 0;
+        let temp = 0;
+        let scanForNums = true;
+        let checkNeg = true;
+
+        do Output.printString(message);
+        while (true){
+            let c = Keyboard.readChar();
+            if (c = 128) {
+                do Output.println();
+                if (neg){
+                    let num = -num;
+                }
+                return num;
+            }
+            if ((c < 48) | (c > 57)) {
+                if (c = 129) {
+                    let num = num / 10;
+                    do Output.backSpace();
+                } else {
+                    if (checkNeg & (c = 45)){
+                            let neg = true;
+                            let checkNeg = false;
+                    } else {
+                        let scanForNums = false;
+                    }
+                }
+            } else {
+                if (scanForNums){
+                    if (c = 48){
+                        let temp = 0;
+                    }
+                    if (c = 49){
+                        let temp = 1;
+                    }
+                    if (c = 50){
+                        let temp = 2;
+                    }
+                    if (c = 51){
+                        let temp = 3;
+                    }
+                    if (c = 52){
+                        let temp = 4;
+                    }
+                    if (c = 53){
+                        let temp = 5;
+                    }
+                    if (c = 54){
+                        let temp = 6;
+                    }
+                    if (c = 55){
+                        let temp = 7;
+                    }
+                    if (c = 56){
+                        let temp = 8;
+                    }
+                    if (c = 57){
+                        let temp = 9;
+                    }
+
+                    let num = num * 10;
+                    let num = num + temp;
+                }
+            }
+        }
+        if (neg){
+            let num = -num;
+        }
+        do Output.println();
+        return num;
     }
 }
