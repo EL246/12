@@ -7,9 +7,11 @@
  * A library for handling user input from the keyboard.
  */
 class Keyboard {
+    static Array keyboard;
 
     /** Initializes the keyboard. */
     function void init() {
+        let keyboard = 24576;
         return;
     } 
 
@@ -34,7 +36,7 @@ class Keyboard {
      * F1 - F12 = 141 - 152
      */
     function char keyPressed() {
-        return Memory.peek(24576);
+        return keyboard[0];
     }
 
     /**								
@@ -95,79 +97,9 @@ class Keyboard {
      * entered text is detected). Also handles user backspaces. 
      */
     function int readInt(String message) {
-        var int num, temp;
-        var bool scanForNums, neg, checkNeg;
-        var char c;
+        var String s;
 
-        let num = 0;
-        let temp = 0;
-        let scanForNums = true;
-        let checkNeg = true;
-
-        do Output.printString(message);
-        while (true){
-            let c = Keyboard.readChar();
-            if (c = 128) {
-                do Output.println();
-                if (neg){
-                    let num = -num;
-                }
-                return num;
-            }
-            if ((c < 48) | (c > 57)) {
-                if (c = 129) {
-                    let num = num / 10;
-                    do Output.backSpace();
-                } else {
-                    if (checkNeg & (c = 45)){
-                            let neg = true;
-                            let checkNeg = false;
-                    } else {
-                        let scanForNums = false;
-                    }
-                }
-            } else {
-                if (scanForNums){
-                    if (c = 48){
-                        let temp = 0;
-                    }
-                    if (c = 49){
-                        let temp = 1;
-                    }
-                    if (c = 50){
-                        let temp = 2;
-                    }
-                    if (c = 51){
-                        let temp = 3;
-                    }
-                    if (c = 52){
-                        let temp = 4;
-                    }
-                    if (c = 53){
-                        let temp = 5;
-                    }
-                    if (c = 54){
-                        let temp = 6;
-                    }
-                    if (c = 55){
-                        let temp = 7;
-                    }
-                    if (c = 56){
-                        let temp = 8;
-                    }
-                    if (c = 57){
-                        let temp = 9;
-                    }
-
-                    let num = num * 10;
-                    let num = num + temp;
-                }
-            }
-        }
-        if (neg){
-            let num = -num;
-        }
-        do Output.println();
-        return num;
+        let s = Keyboard.readLine(message);
+        return s.intValue();
     }
 }
