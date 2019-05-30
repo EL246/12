@@ -103,7 +103,7 @@ class Screen {
         }
 
         if (y1 = y2) {
-            do Screen.drawHorizontalLine(x1,x2,y1);
+            do Screen.drawHorizontalLine(x1,x2,y1,1);
             return;
         }
 
@@ -140,11 +140,14 @@ class Screen {
         return;
     }
 
-    function void drawHorizontalLine(int x1, int x2, int y) {
+    function void drawHorizontalLine(int x1, int x2, int y, int repeat) {
         var int xStart, xEnd, a, dx;
         var int xStartmod16, xEndmod16;
         var int startAddr, endAddr;
+        var int i;
+        var int s, e;
 
+        let i = 0;
         let dx = Math.abs(x2 - x1);
         let xStart = Math.min(x1, x2);
         let xEnd = Math.max(x1,x2);
@@ -152,27 +155,38 @@ class Screen {
         let xStartmod16 = xStart & 15;
         let xEndmod16 = xEnd & 15;
 
-        let startAddr = (y*32) + (xStart/16);
-        let endAddr = (y*32) + (xEnd/16) + (xEndmod16=0);
+        let startAddr = (y*32) + (xStart/16); //startAddr
+        let endAddr = (y*32) + (xEnd/16) + (xEndmod16=0); // endAddr
 
-        if (startAddr = endAddr) {
-            do Screen.drawHorizLineByPixel(xStart, xEnd, y);
-            return;
-        }
+        let s = startAddr;
+        let e = endAddr;
 
-        if (~(xStartmod16 = 0)){
-            do Screen.drawHorizLineByPixel(xStart, xStart + 16 - xStartmod16, y);
-            let startAddr = startAddr + 1;
-        }
+        while (i < repeat){
+            let s = startAddr + (32*i);
+            let e = endAddr + (32*i);
+            if (s = e) {
+                do Screen.drawHorizLineByPixel(xStart, xEnd, y);
+            }
+            else {
 
-        if (~(xEndmod16 = 0)){
-            do Screen.drawHorizLineByPixel(xEnd - xEndmod16, xEnd, y);
-            let endAddr = endAddr - 1;
-        }
+                if (~(xStartmod16 = 0)){
+                    do Screen.drawHorizLineByPixel(xStart, xStart + 16 - xStartmod16, y);
+                    let s = s + 1;
+                }
 
-        while (~(startAddr > endAddr)){
-            let screen[startAddr] = color;
-            let startAddr = startAddr + 1;
+                if (~(xEndmod16 = 0)){
+                    do Screen.drawHorizLineByPixel(xEnd - xEndmod16, xEnd, y);
+                    let e = e - 1;
+                }
+
+                while (~(s > e)){
+                    let screen[s] = color;
+                    let s = s + 1;
+                }
+            }
+
+            let i = i + 1;
+            let y = y + 1;
         }
         return;
     }
@@ -214,12 +228,9 @@ class Screen {
             do Sys.error(9);
         }
 */
-        let i = 0;
+
         let dy = y2 - y1;
-        while (~(i > dy)){
-            do Screen.drawHorizontalLine(x1,x2,(y1 + i));
-            let i = i + 1;
-        }
+        do Screen.drawHorizontalLine(x1,x2,y1,dy+1);
         return;
     }
 
@@ -239,7 +250,7 @@ class Screen {
         while (~(dy > r)){
             let x1 = x - (Math.sqrt((r*r)-(dy*dy)));
             let x2 = x + (Math.sqrt((r*r)-(dy*dy)));
-            do Screen.drawHorizontalLine(x1,x2,(y+dy));
+            do Screen.drawHorizontalLine(x1,x2,(y+dy),1);
             let dy = dy + 1;
         }
 
@@ -247,7 +258,7 @@ class Screen {
         while (~(dy > r)){
             let x1 = x - (Math.sqrt((r*r)-(dy*dy)));
             let x2 = x + (Math.sqrt((r*r)-(dy*dy)));
-            do Screen.drawHorizontalLine(x1,x2,(y-dy));
+            do Screen.drawHorizontalLine(x1,x2,(y-dy),1);
             let dy = dy + 1;
         }
 
