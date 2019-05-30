@@ -36,6 +36,7 @@ class String {
     /** Disposes this string. */
     method void dispose() {
         do string.dispose();
+        do Memory.deAlloc(this);
         return;
     }
 
