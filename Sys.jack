@@ -12,9 +12,9 @@ class Sys {
     function void init() {
         do Memory.init();
         do Math.init();
-        do Keyboard.init();
         do Output.init();
         do Screen.init();
+        do Keyboard.init();
         do Main.main();
         do Sys.halt();
         return;
@@ -37,8 +37,8 @@ class Sys {
             do Sys.error(1);
         }
 
-        let msA = 9000;
-        let msB = 9000;
+        let msA = 4000;
+        let msB = 4000;
         let i = 0;
         let j = 0;
         let k = 0;
@@ -46,7 +46,7 @@ class Sys {
         while (i < duration) {
             while (j < msA){
                 while (k < msB){
-                    do Math.sqrt(Math.sqrt(100 * 100 / 100 * 2));
+                    //do Math.sqrt(Math.sqrt(100 * 100 / 100 * 2));
                     let k = k + 1;
                 }
                 let j = j + 1;
