@@ -141,14 +141,46 @@ class Screen {
     }
 
     function void drawHorizontalLine(int x1, int x2, int y) {
-        var int xStart, a, dx;
+        var int xStart, xEnd, a, dx;
+        var int xStartmod16, xEndmod16;
+        var int startAddr, endAddr;
 
         let dx = Math.abs(x2 - x1);
         let xStart = Math.min(x1, x2);
+        let xEnd = Math.max(x1,x2);
 
-        while (~(a > dx)){
-            do Screen.drawPixel(xStart + a, y);
-            let a = a + 1;
+        let xStartmod16 = xStart & 15;
+        let xEndmod16 = xEnd & 15;
+
+        let startAddr = (y*32) + (xStart/16);
+        let endAddr = (y*32) + (xEnd/16) + (xEndmod16=0);
+
+        if (startAddr = endAddr) {
+            do Screen.drawHorizLineByPixel(xStart, xEnd, y);
+            return;
+        }
+
+        if (~(xStartmod16 = 0)){
+            do Screen.drawHorizLineByPixel(xStart, xStart + 16 - xStartmod16, y);
+            let startAddr = startAddr + 1;
+        }
+
+        if (~(xEndmod16 = 0)){
+            do Screen.drawHorizLineByPixel(xEnd - xEndmod16, xEnd, y);
+            let endAddr = endAddr - 1;
+        }
+
+        while (~(startAddr > endAddr)){
+            let screen[startAddr] = color;
+            let startAddr = startAddr + 1;
+        }
+        return;
+    }
+
+    function void drawHorizLineByPixel(int x1, int x2, int y) {
+        while (~(x1>x2)) {
+            do Screen.drawPixel(x1,y);
+            let x1 = x1 + 1;
         }
         return;
     }
@@ -203,11 +235,11 @@ class Screen {
             do Sys.error(13);
         }
 */
-        let dy = 0;
+       let dy = 0;
         while (~(dy > r)){
             let x1 = x - (Math.sqrt((r*r)-(dy*dy)));
             let x2 = x + (Math.sqrt((r*r)-(dy*dy)));
-            do Screen.drawLine(x1,(y+dy),x2,(y+dy));
+            do Screen.drawHorizontalLine(x1,x2,(y+dy));
             let dy = dy + 1;
         }
 
@@ -215,7 +247,7 @@ class Screen {
         while (~(dy > r)){
             let x1 = x - (Math.sqrt((r*r)-(dy*dy)));
             let x2 = x + (Math.sqrt((r*r)-(dy*dy)));
-            do Screen.drawLine(x1,(y-dy),x2,(y-dy));
+            do Screen.drawHorizontalLine(x1,x2,(y-dy));
             let dy = dy + 1;
         }
 
